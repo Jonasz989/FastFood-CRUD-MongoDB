@@ -1,22 +1,20 @@
 package Restaurant.Database;
 
 import Restaurant.System.Menu;
+import Restaurant.Users.Session;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mongodb.ConnectionString;
-import com.mongodb.MongoException;
 import com.mongodb.client.*;
 import com.mongodb.client.model.Projections;
 import com.mongodb.client.result.InsertOneResult;
-import org.bson.BsonValue;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
 
-import java.lang.reflect.Array;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class Connection {
 
@@ -28,10 +26,18 @@ public class Connection {
 
     }
 
-    public static int countDocuments() {
+    public static int countDocumentsSession() {
         try (MongoClient mongoClient = MongoClients.create(connectionString)) {
             MongoDatabase database = mongoClient.getDatabase("lab03");
             MongoCollection<Document> collection = database.getCollection("session");
+            return (int) collection.countDocuments();
+        }
+    }
+
+    public static int countDocumentsOrders() {
+        try (MongoClient mongoClient = MongoClients.create(connectionString)) {
+            MongoDatabase database = mongoClient.getDatabase("lab03");
+            MongoCollection<Document> collection = database.getCollection("orders");
             return (int) collection.countDocuments();
         }
     }
@@ -41,8 +47,27 @@ public class Connection {
             MongoDatabase database = mongoClient.getDatabase("lab03");
             MongoCollection<Document> collection = database.getCollection("session");
             Document newUserSession = new Document("_id", new ObjectId())
-                    .append("klient_id", countDocuments() + 1);
+                    .append("klient_id", countDocumentsSession() + 1);
             InsertOneResult result = collection.insertOne(newUserSession);
+        }
+    }
+
+    public static void addOrder(Session client) {
+        try (MongoClient mongoClient = MongoClients.create(connectionString)) {
+            MongoDatabase database = mongoClient.getDatabase("lab03");
+            MongoCollection<Document> collection = database.getCollection("orders");
+            Document newOrder = new Document("_id", new ObjectId())
+                    .append("order_id", countDocumentsOrders() + 1)
+                    .append("user_id", client.getUserID())
+                    .append("positions", client.getBasket())
+                    .append("price", client.getCurrentPrice())
+                    .append("date", LocalDateTime.now())
+                    .append("order_state", "ORDERED")
+                    .append("payment_method", "CASH")
+                    .append("discount", "NO")
+                    .append("chef_id", 0)
+                    .append("cashier_id", 0);
+            InsertOneResult result = collection.insertOne(newOrder);
         }
     }
 

@@ -1,3 +1,7 @@
+/**
+ * @author Damian Jabłoński
+ */
+
 package Restaurant.Users;
 
 public class WaiterApp {
