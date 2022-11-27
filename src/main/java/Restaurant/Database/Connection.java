@@ -1,29 +1,23 @@
+/**
+ * Class for whole connection with database and CRUD methods
+ */
+
 package Restaurant.Database;
 
 import Restaurant.System.Menu;
 import Restaurant.System.Order;
-import Restaurant.System.TimeParser;
 import Restaurant.Users.Session;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mongodb.ConnectionString;
 import com.mongodb.client.*;
 import com.mongodb.client.model.Filters;
-import com.mongodb.client.model.Projections;
 import com.mongodb.client.model.Updates;
-import com.mongodb.client.result.InsertOneResult;
-import com.mongodb.client.result.UpdateResult;
 import org.bson.Document;
 import org.bson.conversions.Bson;
-import org.bson.types.BSONTimestamp;
 import org.bson.types.ObjectId;
-
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.concurrent.TimeUnit;
-
 import static com.mongodb.client.model.Filters.*;
 
 public class Connection {
@@ -31,21 +25,11 @@ public class Connection {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //VARIABLES
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    static ConnectionString connectionString = new ConnectionString("mongodb+srv://damian-admin:nAYMpAAIXtscbovn@cluster0.seyvxu0.mongodb.net/?retryWrites=true&w=majority");
-    static int id = 1;
-    static Integer[] zamowienia = {1,2,3,4,5};
+    static ConnectionString connectionString = new ConnectionString("mongodb+srv://damian-laby:9o4wtwe4QE01neAu@cluster0.seyvxu0.mongodb.net/?retryWrites=true&w=majority");
 
-    public static void main(String[] args) throws InterruptedException {
-
-        LocalDateTime data = LocalDateTime.now();
-        System.out.println(data);
-        TimeUnit.SECONDS.sleep(5);
-        LocalDateTime data2 = LocalDateTime.now();
-        LocalDateTime data3 = data2.minusMinutes(5);
-        System.out.println(data3);
-        System.out.println(data.compareTo(data3));
-
-    }
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //CLASS
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public static int countDocumentsSession() {
         try (MongoClient mongoClient = MongoClients.create(connectionString)) {
@@ -69,7 +53,7 @@ public class Connection {
             MongoCollection<Document> collection = database.getCollection("session");
             Document newUserSession = new Document("_id", new ObjectId())
                     .append("klient_id", countDocumentsSession() + 1);
-            InsertOneResult result = collection.insertOne(newUserSession);
+            collection.insertOne(newUserSession);
         }
     }
 
@@ -89,7 +73,7 @@ public class Connection {
                     .append("discount", "NO")
                     .append("chef_id", 0)
                     .append("cashier_id", 0);
-            InsertOneResult result = collection.insertOne(newOrder);
+            collection.insertOne(newOrder);
         }
     }
 
@@ -97,11 +81,6 @@ public class Connection {
         try (MongoClient mongoClient = MongoClients.create(connectionString)) {
             MongoDatabase database = mongoClient.getDatabase("lab03");
             MongoCollection<Document> collection = database.getCollection("menu");
-
-            Bson projectionFields = Projections.fields(
-                    Projections.include("menu_id", "name", "price"),
-                    Projections.excludeId()
-            );
 
             ObjectMapper objectMapper = new ObjectMapper();
 
@@ -112,8 +91,6 @@ public class Connection {
                     Menu positionInMenu = objectMapper.readValue(cursor.next().toJson(), Menu.class); //using reader class from json to java class
                     menuWithFood.add(positionInMenu); //adding food to list on our clientapp
                 }
-            } catch (JsonMappingException e) {
-                throw new RuntimeException(e);
             } catch (JsonProcessingException e) {
                 throw new RuntimeException(e);
             }
@@ -133,8 +110,6 @@ public class Connection {
                     Order orderFromClient = objectMapper.readValue(cursor.next().toJson(), Order.class);
                     client.getOrders().add(orderFromClient);
                 }
-            } catch (JsonMappingException e) {
-                throw new RuntimeException(e);
             } catch (JsonProcessingException e) {
                 throw new RuntimeException(e);
             }
@@ -154,8 +129,6 @@ public class Connection {
                     Order order = objectMapper.readValue(cursor.next().toJson(), Order.class);
                     orders.add(order);
                 }
-            } catch (JsonMappingException e) {
-                throw new RuntimeException(e);
             } catch (JsonProcessingException e) {
                 throw new RuntimeException(e);
             }
@@ -175,8 +148,6 @@ public class Connection {
                     Order order = objectMapper.readValue(cursor.next().toJson(), Order.class);
                     orders.add(order);
                 }
-            } catch (JsonMappingException e) {
-                throw new RuntimeException(e);
             } catch (JsonProcessingException e) {
                 throw new RuntimeException(e);
             }
@@ -188,9 +159,9 @@ public class Connection {
             MongoDatabase database = mongoClient.getDatabase("lab03");
             MongoCollection<Document> collection = database.getCollection("orders");
 
-            Bson query  = Filters.eq("order_id",orderID);
-            Bson updates  = Updates.combine(Updates.set("payment_status","PAYED"),Updates.set("order_state","IN PROGRESS"));
-            UpdateResult upResult = collection.updateOne(query, updates);
+            Bson query = Filters.eq("order_id", orderID);
+            Bson updates = Updates.combine(Updates.set("payment_status", "PAYED"), Updates.set("order_state", "IN PROGRESS"));
+            collection.updateOne(query, updates);
 
         }
     }
@@ -200,9 +171,9 @@ public class Connection {
             MongoDatabase database = mongoClient.getDatabase("lab03");
             MongoCollection<Document> collection = database.getCollection("orders");
 
-            Bson query  = Filters.eq("order_id",orderID);
-            Bson updates  = Updates.set("order_state","READY");
-            UpdateResult upResult = collection.updateOne(query, updates);
+            Bson query = Filters.eq("order_id", orderID);
+            Bson updates = Updates.set("order_state", "READY");
+            collection.updateOne(query, updates);
 
         }
     }
@@ -212,9 +183,9 @@ public class Connection {
             MongoDatabase database = mongoClient.getDatabase("lab03");
             MongoCollection<Document> collection = database.getCollection("orders");
 
-            Bson query  = Filters.eq("order_id",orderID);
-            Bson updates  = Updates.set("order_state","GIVEN TO CLIENT");
-            UpdateResult upResult = collection.updateOne(query, updates);
+            Bson query = Filters.eq("order_id", orderID);
+            Bson updates = Updates.set("order_state", "GIVEN TO CLIENT");
+            collection.updateOne(query, updates);
 
         }
     }
@@ -224,9 +195,9 @@ public class Connection {
             MongoDatabase database = mongoClient.getDatabase("lab03");
             MongoCollection<Document> collection = database.getCollection("orders");
 
-            Bson query  = Filters.eq("order_id",orderID);
-            Bson updates  = Updates.set("discount","YES");
-            UpdateResult upResult = collection.updateOne(query, updates);
+            Bson query = Filters.eq("order_id", orderID);
+            Bson updates = Updates.set("discount", "YES");
+            collection.updateOne(query, updates);
 
         }
     }

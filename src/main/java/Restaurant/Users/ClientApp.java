@@ -1,5 +1,14 @@
 /**
+ * Whole client class
+ *
  * @author Damian Jabłoński
+ *
+ * Compiling:
+ * javac *.java
+ * Creating JAR file
+ * jar cfm jarFileName MANIFEST.MF *.class
+ * Starting program
+ * java -jar MyProgram.jar
  */
 
 package Restaurant.Users;
@@ -7,7 +16,6 @@ package Restaurant.Users;
 import Restaurant.Database.Connection;
 import Restaurant.System.Menu;
 import Restaurant.System.MyException;
-import Restaurant.System.Order;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -16,17 +24,15 @@ public class ClientApp {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //VARIABLES
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    private static ArrayList<Menu> menuWithFood = new ArrayList<>();
-    private static ArrayList<Integer> foodIDs = new ArrayList<>();
+    final private static ArrayList<Menu> menuWithFood = new ArrayList<>();
+    final private static ArrayList<Integer> foodIDs = new ArrayList<>();
     static Scanner scan = new Scanner(System.in);
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //CLASS
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
     public static void main(String[] args) {
-
 
 
         Session client = new Session(Connection.countDocumentsSession()); //creating new user session
@@ -36,17 +42,12 @@ public class ClientApp {
         menu(client); //starting menu
 
 
-
-
-
-
-
-
     }
 
     public static void createSession() { // adding session in database
         Connection.addSession();
     }
+
     public static void menu(Session client) {
         for (;;) {
             System.out.println();
@@ -68,6 +69,7 @@ public class ClientApp {
                     finalizeOrder(client); //finalizing order
                     break;
                 case 4:
+                    client.getOrders().clear(); //clearing current orders from memory
                     Connection.readOrdersFromUser(client); //reading order of client from db
                     checkOrders(client); //showing his orders
                     break;
@@ -79,10 +81,11 @@ public class ClientApp {
             }
         }
     }
+
     public static void checkMenu(Session client) { //showing menu
-        for(;;) {
+        for (; ; ) {
             for (Menu menu : menuWithFood) { //showing possible options
-                System.out.println((int)menu.getMenu_id() + ". " + menu.getName() + " - price: " + menu.getPrice());
+                System.out.println((int) menu.getMenu_id() + ". " + menu.getName() + " - price: " + menu.getPrice());
                 foodIDs.add((int) menu.getMenu_id());
             }
             int choiceInChoosingFood;
@@ -101,6 +104,7 @@ public class ClientApp {
         }
 
     }
+
     public static void checkBasket(Session client) { //checking what we have in basket
         if (client.getBasket().size() == 0) {
             System.out.println("No items in basket");
@@ -111,6 +115,7 @@ public class ClientApp {
             System.out.println("Total price: " + client.getCurrentPrice());
         }
     }
+
     public static void addToBasket(Menu IDOfPosition, Session client) {
         try {
             if (client.getBasket().size() > 5) {
@@ -121,15 +126,16 @@ public class ClientApp {
             client.setCurrentPrice(IDOfPosition.getPrice() + client.getCurrentPrice()); //updating price
 
         } catch (MyException e) {
-
+            System.out.println("Sorry, you can not make order bigger than 6 items");
         }
 
     }
+
     public static void finalizeOrder(Session client) {
         System.out.println("Do you want to finalize your order?");
         System.out.println("1. Yes - type '1'");
         System.out.println("2. No - type '2'");
-        int choice = 0;
+        int choice;
         choice = scan.nextInt();
         switch (choice) {
             case 1:
@@ -170,38 +176,28 @@ public class ClientApp {
                 break;
         }
     }
+
     public static void resetClientForNewOrder(Session client) {
         client.setCurrentPrice(0);
         client.getBasket().clear();
         client.getIdsOfBasket().clear();
         client.setPaymentType("NONE");
     }
+
     public static void submitOrder(Session client) { //adding order to db
         Connection.addOrder(client);
     }
+
     public static void checkOrders(Session client) { //checking our orders from db
         System.out.println("Your orders: ");
-        for (Order currentOrder : client.getOrders()) {
-
-
-
-
-        }
-
-            if (client.getOrders().isEmpty()) {
-                System.out.println("No orders");
-            } else {
-                for (int i = 1; i < client.getOrders().size() + 1; i++) {
-                    System.out.println(i + ". " + "ID: " + (int) client.getOrders().get(i - 1).getOrder_id() + " - STATUS: " + client.getOrders().get(i - 1).getOrder_state() + " - PAYED: " + client.getOrders().get(i - 1).getPayment_status() + " DISCOUNT: " + client.getOrders().get(i - 1).getDiscount());
-                }
+        if (client.getOrders().isEmpty()) {
+            System.out.println("No orders");
+        } else {
+            for (int i = 1; i < client.getOrders().size() + 1; i++) {
+                System.out.println(i + ". " + "ID: " + (int) client.getOrders().get(i - 1).getOrder_id() + " - STATUS: " + client.getOrders().get(i - 1).getOrder_state() + " - PAYED: " + client.getOrders().get(i - 1).getPayment_status() + " - DISCOUNT: " + client.getOrders().get(i - 1).getDiscount());
             }
-
-
-
-
-
+        }
     }
-
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

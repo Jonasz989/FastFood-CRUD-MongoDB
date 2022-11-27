@@ -12,17 +12,24 @@ import java.util.Scanner;
 
 public class ChefApp {
 
-    private static ArrayList<Order> ORDERS = new ArrayList<>();
-    private static ArrayList<Integer> ORDERSid = new ArrayList<>();
-    private static ArrayList<Menu> menuWithFood = new ArrayList<>();
-    private static ArrayList<Integer> foodIDs = new ArrayList<>();
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //VARIABLES
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private static final ArrayList<Order> ORDERS = new ArrayList<>();
+    private static final ArrayList<Integer> ORDERSid = new ArrayList<>();
+    private static final ArrayList<Menu> menuWithFood = new ArrayList<>();
+    private static final ArrayList<Integer> foodIDs = new ArrayList<>();
     static Scanner scan = new Scanner(System.in);
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //CLASS
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     public static void main(String[] args) {
 
-        Connection.readMenu(menuWithFood);
-        for (Menu menu : menuWithFood) {
-            foodIDs.add((int) menu.getMenu_id());
-        }
+        readMenu(); //reading menu to memory
+
 
         for (;;) {
             int counterForOrders = 1;
@@ -30,8 +37,8 @@ public class ChefApp {
             System.out.println("Orders to do: ");
             for (Order ord : ORDERS) {
                 System.out.println(counterForOrders++ + ". Order ID: " + (int) ord.getOrder_id());
-                for(Object z : ord.getPositions()) {
-                    System.out.println(menuWithFood.get((int) z).getName());
+                for (Object z : ord.getPositions()) {
+                    System.out.println(menuWithFood.get((int) z - 1).getName());
                 }
             }
             System.out.println("What do you want do: ");
@@ -39,11 +46,10 @@ public class ChefApp {
             choice = scan.nextInt();
 
             if (choice == 0) {
-                readOrders();
+                readOrders(); //refreshing orders
             } else if (ORDERSid.contains(choice - 1)) {
                 Connection.updateOrderChef((int) ORDERS.get(choice - 1).getOrder_id());
                 readOrders();
-
             } else {
                 System.out.println("Sorry, wrong position");
             }
@@ -51,12 +57,20 @@ public class ChefApp {
         }
     }
 
+
+    private static void readMenu() {
+        Connection.readMenu(menuWithFood); //connecting to db to get menu into menuWithFood
+        for (Menu menu : menuWithFood) {
+            foodIDs.add((int) menu.getMenu_id()); //adding IDs of position to menu
+        }
+    }
+
     private static void readOrders() {
-        ORDERS.clear();
+        ORDERS.clear(); //clearing current orders in memory
         int tempForOrdersID = 0;
         Connection.readOrdersThatAreInProgress(ORDERS);
         for (Order ord : ORDERS) {
-            ORDERSid.add(tempForOrdersID++);
+            ORDERSid.add(tempForOrdersID++); //calculating how many IDs from order are in the ORDERS
         }
     }
 }
