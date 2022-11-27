@@ -1,0 +1,15 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="Lab03v1:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/Lab03v1_jar</output-path>
+    <root id="archive" name="Lab03v1.jar">
+      <element id="module-output" name="Lab03v1" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/mongodb/bson/4.7.2/bson-4.7.2.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/mongodb/mongodb-driver-sync/4.7.2/mongodb-driver-sync-4.7.2.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/fasterxml/jackson/core/jackson-core/2.11.3/jackson-core-2.11.3.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/mongodb/bson-record-codec/4.7.2/bson-record-codec-4.7.2.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/mongodb/mongodb-driver-core/4.7.2/mongodb-driver-core-4.7.2.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/fasterxml/jackson/core/jackson-databind/2.11.3/jackson-databind-2.11.3.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/fasterxml/jackson/core/jackson-annotations/2.11.3/jackson-annotations-2.11.3.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>

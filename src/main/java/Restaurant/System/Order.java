@@ -1,38 +1,45 @@
+/**
+ * A class for converting our order from database to application
+ */
 package Restaurant.System;
 
 import java.util.ArrayList;
 
 public class Order {
     _id _idObject;
-    Order_id Order_idObject;
-    User_id User_idObject;
-    ArrayList <Object> positions = new ArrayList<>();
-    Price PriceObject;
+    private float order_id;
+    private float user_id;
+    ArrayList < Object > positions = new ArrayList < Object > ();
+    private float price;
     Date DateObject;
     private String order_state;
+    private String payment_method;
     private String payment_status;
     private String discount;
-    Chef_id Chef_idObject;
-    Cashier_id Cashier_idObject;
-    private String payment_method;
+    private float chef_id;
+    private float cashier_id;
 
 
     // Getter Methods
+
 
     public _id get_id() {
         return _idObject;
     }
 
-    public Order_id getOrder_id() {
-        return Order_idObject;
+    public float getOrder_id() {
+        return order_id;
     }
 
-    public User_id getUser_id() {
-        return User_idObject;
+    public float getUser_id() {
+        return user_id;
     }
 
-    public Price getPrice() {
-        return PriceObject;
+    public ArrayList<Object> getPositions() {
+        return positions;
+    }
+    public float getPrice() {
+        return price;
     }
 
     public Date getDate() {
@@ -43,6 +50,10 @@ public class Order {
         return order_state;
     }
 
+    public String getPayment_method() {
+        return payment_method;
+    }
+
     public String getPayment_status() {
         return payment_status;
     }
@@ -51,16 +62,12 @@ public class Order {
         return discount;
     }
 
-    public Chef_id getChef_id() {
-        return Chef_idObject;
+    public float getChef_id() {
+        return chef_id;
     }
 
-    public Cashier_id getCashier_id() {
-        return Cashier_idObject;
-    }
-
-    public String getPayment_method() {
-        return payment_method;
+    public float getCashier_id() {
+        return cashier_id;
     }
 
     // Setter Methods
@@ -69,16 +76,16 @@ public class Order {
         this._idObject = _idObject;
     }
 
-    public void setOrder_id(Order_id order_idObject) {
-        this.Order_idObject = order_idObject;
+    public void setOrder_id(float order_id) {
+        this.order_id = order_id;
     }
 
-    public void setUser_id(User_id user_idObject) {
-        this.User_idObject = user_idObject;
+    public void setUser_id(float user_id) {
+        this.user_id = user_id;
     }
 
-    public void setPrice(Price priceObject) {
-        this.PriceObject = priceObject;
+    public void setPrice(float price) {
+        this.price = price;
     }
 
     public void setDate(Date dateObject) {
@@ -89,27 +96,25 @@ public class Order {
         this.order_state = order_state;
     }
 
-    public void setPayment_status(String payment_status) {
-        this.payment_status = payment_status;
+    public void setPayment_method(String payment_method) {
+        this.payment_method = payment_method;
     }
 
     public void setDiscount(String discount) {
         this.discount = discount;
     }
 
-    public void setChef_id(Chef_id chef_idObject) {
-        this.Chef_idObject = chef_idObject;
+    public void setChef_id(float chef_id) {
+        this.chef_id = chef_id;
     }
 
-    public void setCashier_id(Cashier_id cashier_idObject) {
-        this.Cashier_idObject = cashier_idObject;
+    public void setCashier_id(float cashier_id) {
+        this.cashier_id = cashier_id;
     }
-
-    public void setPayment_method(String payment_method) {
-        this.payment_method = payment_method;
+    public void setPositions(ArrayList<Object> positions) {
+        this.positions = positions;
+    }
+    public void setPayment_status(String payment_status) {
+        this.payment_status = payment_status;
     }
 }
-
-
-
-

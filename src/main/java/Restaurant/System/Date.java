@@ -1,18 +1,18 @@
 package Restaurant.System;
 
 public class Date {
-    $date $dateObject;
+    private String $date;
 
 
     // Getter Methods
 
-    public $date get$date() {
-        return $dateObject;
+    public String get$date() {
+        return $date;
     }
 
     // Setter Methods
 
-    public void set$date($date $dateObject) {
-        this.$dateObject = $dateObject;
+    public void set$date(String $date) {
+        this.$date = $date;
     }
 }
