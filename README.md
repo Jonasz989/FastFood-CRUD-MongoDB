@@ -1,3 +1,5 @@
+It is better to use @Serializable than give strange names to clasess
+
 # Lab03
 
 For English below:
